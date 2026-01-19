@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/static/style.css" />
+    <script src="/static/main.js" defer></script>
+    <title>MovieNite</title>
+  </head>
+  <body>
+    <header>
+      <h1>MovieNite</h1>
+    </header>
+    <main>
+      <div class="categories">
+        <button id="watched-toggle" class="category-button active">
+          Watched
+        </button>
+        <button id="upcoming-toggle" class="category-button active">
+          Upcoming
+        </button>
+      </div>
+      <section id="watched-movies" class="movie-section">
+        <h2>Watched</h2>
+        <div id="watched-list" class="movie-list"></div>
+      </section>
+      <section id="upcoming-movies" class="movie-section">
+        <h2>Upcoming</h2>
+        <div id="upcoming-list" class="movie-list"></div>
+      </section>
+    </main>
+  </body>
+</html>
