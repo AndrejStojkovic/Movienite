@@ -1,4 +1,5 @@
 import logging
+from contextlib import asynccontextmanager
 from urllib.parse import urlparse, urlunparse
 
 import tldextract
@@ -16,6 +17,13 @@ VALID_MOVIE_SITES = ['imdb.com', 'letterboxd.com']
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    logger.info("Application starting up")
+    yield
+    logger.info("Application shutting down")
 
 
 @app.get("/")
