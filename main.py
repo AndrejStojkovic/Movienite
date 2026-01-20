@@ -77,6 +77,16 @@ async def add_new_movie(request: AddMovieRequest):
 
     return {"message": "Movie added successfully"}
 
+@app.post("/movies/{movie_id}/toggle_watch")
+async def toggle_watch(movie_id: int):
+    # Not implemented yet
+    return {"message": f"Toggled watch status for movie {movie_id}"}
+
+
+@app.post("/movies/{movie_id}/discard")
+async def discard_movie(movie_id: int):
+    # Not implemented yet
+    return {"message": f"Discarded movie {movie_id}"}
 
 def main():
     uvicorn.run(app, host="127.0.0.1", port=8000)
