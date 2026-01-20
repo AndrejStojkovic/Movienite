@@ -34,6 +34,9 @@ body {
   transition:
     transform 0.2s,
     box-shadow 0.2s;
+  display: flex; /* place image left, content right */
+  align-items: flex-start;
+  gap: 15px;
 }
 
 .movie-card h3 {
@@ -46,6 +49,21 @@ body {
   margin: 5px 0;
   font-size: 0.9rem;
   color: #555;
+}
+
+/* Image displayed on the left side with fixed height */
+.movie-image {
+  height: 100px; /* fixed height as requested */
+  width: auto; /* preserve aspect ratio */
+  flex-shrink: 0;
+  border-radius: 4px;
+  object-fit: contain; /* keep original aspect within bounds */
+}
+
+/* Content wrapper to stack title, description, links */
+.movie-content {
+  display: flex;
+  flex-direction: column;
 }
 
 /* Style for movie links */

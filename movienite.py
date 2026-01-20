@@ -1,4 +1,6 @@
 import csv
+import re
+from urllib.parse import quote_plus
 
 import requests
 from bs4 import BeautifulSoup
@@ -20,6 +22,7 @@ def fetch_imdb(url: str) -> dict | None:
         description = soup.select_one("p[data-testid='plot'] > span[role='presentation']").text.strip()
         id = url.split('/')[4]
         imdb_url = f'https://www.imdb.com/title/{id}/'
+        image_link = soup.find('img', class_='ipc-image')['src']
 
         return {
             'id': id,
@@ -27,6 +30,7 @@ def fetch_imdb(url: str) -> dict | None:
             'description': description,
             'letterboxd_url': '',
             'imdb_url': imdb_url,
+            'image_link': image_link,
             'boobies': 'no',
             'watched': 'no'
         }
@@ -35,27 +39,43 @@ def fetch_imdb(url: str) -> dict | None:
 
 
 def fetch_letterboxd(url: str) -> dict | None:
+    """Resolve a Letterboxd URL to an IMDb title by searching IMDb.
+
+    Letterboxd often blocks server-side scraping (403/Cloudflare). Instead of
+    requesting Letterboxd, extract the movie slug from the URL and search IMDb.
+    """
     try:
-        response = requests.get(url)
+        # Extract slug right after /film/ (supports both:
+        # https://letterboxd.com/film/<slug>/
+        # https://letterboxd.com/<user>/film/<slug>/
+        match = re.search(r"/film/([^/?#]+)/?", url)
+        if not match:
+            return None
+
+        slug = match.group(1)
+        movie_title = slug.replace('-', ' ').strip()
+        if not movie_title:
+            return None
+
+        search_url = f"https://www.imdb.com/find/?q={quote_plus(movie_title)}"
+        response = requests.get(search_url, headers=FETCH_HEADER, timeout=10)
         response.raise_for_status()
 
         soup = BeautifulSoup(response.text, 'html.parser')
-        title = soup.find('span', class_='js-widont').text.strip()
-        description = soup.select_one('.truncate > p:nth-child(1)').text.strip()
-        imdb_url = soup.select_one("a[data-track-action='IMDb']")['href']
-        id = imdb_url.split('/')[4]
-        imdb_url = f'https://www.imdb.com/title/{id}/'
+        first_link = soup.find('a', class_='ipc-title-link-wrapper')
+        if not first_link or not first_link.get('href'):
+            return None
 
-        return {
-            'id': id,
-            'title': title,
-            'description': description,
-            'letterboxd_url': url,
-            'imdb_url': imdb_url,
-            'boobies': 'no',
-            'watched': 'no'
-        }
-    except:
+        href = first_link['href']
+        imdb_url = f"https://www.imdb.com{href}" if href.startswith('/') else href
+
+        movie_data = fetch_imdb(imdb_url)
+        if not movie_data:
+            return None
+
+        movie_data['letterboxd_url'] = url
+        return movie_data
+    except Exception:
         return None
 
 
@@ -66,7 +86,7 @@ def add_movie(movie: dict):
             raise ValueError("Movie already exists")
 
     with open(FILE_NAME, mode='a', encoding='utf-8', newline='') as file:
-        fieldnames = ['id', 'title', 'description', 'letterboxd_url', 'imdb_url', 'boobies', 'watched']
+        fieldnames = ['id', 'title', 'description', 'letterboxd_url', 'imdb_url', 'boobies', 'watched', 'image_link']
         writer = csv.DictWriter(file, fieldnames=fieldnames)
 
         if file.tell() == 0:

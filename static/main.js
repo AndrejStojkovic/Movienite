@@ -2,13 +2,26 @@ const createMovieCard = (movie) => {
   const card = document.createElement("div");
   card.className = "movie-card";
 
+  // Add image on the left when available
+  if (movie.image_link) {
+    const img = document.createElement("img");
+    img.src = movie.image_link;
+    img.alt = `${movie.title} poster`;
+    img.className = "movie-image";
+    card.appendChild(img);
+  }
+
+  // Wrap text content to appear to the right of the image
+  const content = document.createElement("div");
+  content.className = "movie-content";
+
   const title = document.createElement("h3");
   title.textContent = movie.title;
-  card.appendChild(title);
+  content.appendChild(title);
 
   const description = document.createElement("p");
   description.textContent = movie.description;
-  card.appendChild(description);
+  content.appendChild(description);
 
   const links = document.createElement("div");
   links.className = "movie-links";
@@ -29,7 +42,8 @@ const createMovieCard = (movie) => {
     links.appendChild(imdbLink);
   }
 
-  card.appendChild(links);
+  content.appendChild(links);
+  card.appendChild(content);
 
   return card;
 };
