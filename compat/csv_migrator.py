@@ -14,7 +14,7 @@ load_dotenv()
 logger = logging.getLogger("csv_migrator")
 logging.basicConfig(level=logging.INFO)
 
-CSV_PATH = Path(__file__).parent.parent / 'data' / 'movies.csv'
+CSV_PATH = Path(__file__).parent.parent / 'movies.csv'
 
 INSERT_SQL = """
              INSERT INTO movies (id, title, original_title, description, letterboxd_url, imdb_url,
