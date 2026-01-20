@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="/static/favicon.svg" />
     <link rel="stylesheet" href="/static/style.css" />
     <script src="/static/main.js" defer></script>
     <title>MovieNite</title>
@@ -10,6 +9,13 @@
   <body>
     <header>
       <h1>MovieNite</h1>
+      <div class="theme-selector">
+        <select id="theme-dropdown" class="theme-dropdown" aria-label="Theme selector">
+          <option value="system">System Default</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </div>
     </header>
     <main>
       <div class="categories">
