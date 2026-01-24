@@ -46,7 +46,7 @@ const App = () => {
         </div>
 
         <Show when={loading()}>
-          <p>Loading movies...</p>
+          <p class="empty-message">Loading movies...</p>
         </Show>
 
         <Show when={error()}>

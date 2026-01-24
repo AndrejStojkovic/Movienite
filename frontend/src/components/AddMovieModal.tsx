@@ -1,4 +1,4 @@
-import { type Component, createSignal, Show } from "solid-js";
+import { type Component, createEffect, createSignal, Show } from "solid-js";
 import { api } from "@/utils/api";
 
 interface AddMovieModalProps {
@@ -10,6 +10,14 @@ interface AddMovieModalProps {
 export const AddMovieModal: Component<AddMovieModalProps> = (props) => {
   const [formLoading, setFormLoading] = createSignal(false);
   const [formError, setFormError] = createSignal<string | null>(null);
+
+  createEffect(() => {
+    if (props.isOpen) {
+      document.addEventListener("keydown", handleKeyDown);
+    } else {
+      document.removeEventListener("keydown", handleKeyDown);
+    }
+  });
 
   const handleBackgroundClick = (e: MouseEvent) => {
     if (e.target && (e.target as HTMLElement).classList.contains("modal")) {
@@ -57,12 +65,7 @@ export const AddMovieModal: Component<AddMovieModalProps> = (props) => {
 
   return (
     <Show when={props.isOpen}>
-      <div
-        class="modal"
-        tabIndex={-1}
-        onClick={handleBackgroundClick}
-        onKeyDown={handleKeyDown}
-      >
+      <div class="modal" tabIndex={-1} onClick={handleBackgroundClick}>
         <div class="modal-content">
           <span
             class="close-button"

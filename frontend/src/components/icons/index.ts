@@ -4,3 +4,7 @@ export { WatchIcon } from "./WatchIcon";
 export { UnwatchIcon } from "./UnwatchIcon";
 export { DiscardIcon } from "./DiscardIcon";
 export { StarIcon } from "./StarIcon";
+export { SunIcon } from "./SunIcon";
+export { MoonIcon } from "./MoonIcon";
+export { SystemIcon } from "./SystemIcon";
+export { PlusIcon } from "./PlusIcon";

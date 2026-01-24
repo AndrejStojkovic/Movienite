@@ -3,7 +3,7 @@ import type { Component } from "solid-js";
 
 export const Header: Component = () => (
   <header>
-    <h1>MovieNite</h1>
+    <h1 class="header-title">MovieNite</h1>
     <ThemeSelector />
   </header>
 );

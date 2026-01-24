@@ -15,7 +15,7 @@ const MovieSection: Component<MovieSectionProps> = (props) => {
 
   return (
     <section class="movie-section">
-      <h2>
+      <h2 class="section-heading">
         {props.title} {`(${props.movies.length})`}
       </h2>
       <div class={gridClass()}>
@@ -26,7 +26,13 @@ const MovieSection: Component<MovieSectionProps> = (props) => {
           }
         >
           <For each={props.movies}>
-            {(movie) => <MovieCard movie={movie} onAction={props.onAction} />}
+            {(movie) => (
+              <MovieCard
+                movie={movie}
+                viewType={props.viewType}
+                onAction={props.onAction}
+              />
+            )}
           </For>
         </Show>
       </div>

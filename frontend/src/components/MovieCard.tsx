@@ -8,6 +8,7 @@ import type { Movie } from "@/types";
 
 interface MovieCardProps {
   movie: Movie;
+  viewType?: "list" | "grid";
   onAction?: () => void;
 }
 
@@ -37,7 +38,10 @@ const MovieCard: Component<MovieCardProps> = (props) => {
   const isWatched = () => props.movie.watched === "yes";
 
   return (
-    <div class="movie-card">
+    <div
+      class="movie-card"
+      classList={{ "grid-card": props.viewType === "grid" }}
+    >
       <Show when={props.movie.image_link}>
         <img
           src={props.movie.image_link}
