@@ -15,7 +15,9 @@ const MovieSection: Component<MovieSectionProps> = (props) => {
 
   return (
     <section class="movie-section">
-      <h2>{props.title}</h2>
+      <h2>
+        {props.title} {`(${props.movies.length})`}
+      </h2>
       <div class={gridClass()}>
         <Show
           when={props.movies.length > 0}
