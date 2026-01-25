@@ -10,4 +10,9 @@ export interface Movie {
   votes?: string;
   no_reviews?: string;
   watched?: string; // "yes" or undefined
+  user: {
+    username: string;
+    avatar_url?: string;
+    discord_id?: string;
+  };
 }

@@ -1,0 +1,59 @@
+import { createSignal, onMount } from "solid-js";
+import { api } from "@/utils/api";
+
+export interface User {
+  id: string;
+  username: string;
+  avatar_url?: string;
+  email: string;
+  discord_id?: string;
+  created_at: string;
+  is_admin: boolean;
+}
+
+export function useAuth() {
+  const [user, setUser] = createSignal<User | null>(null);
+  const [loading, setLoading] = createSignal(true);
+  const [error, setError] = createSignal<string | null>(null);
+
+  const fetchUser = async () => {
+    try {
+      const userData = await api.getUser();
+      setUser(userData);
+      setError(null);
+    } catch (err) {
+      console.error("Failed to fetch user:", err);
+      setError("Failed to load user information");
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const login = async () => {
+    try {
+      const { url } = await api.getLoginUrl();
+      window.location.href = url;
+    } catch (err) {
+      console.error("Failed to get login URL:", err);
+      setError("Failed to initiate login");
+    }
+  };
+
+  const logout = async () => {
+    await api.logout();
+    setUser(null);
+  };
+
+  onMount(() => {
+    void fetchUser();
+  });
+
+  return {
+    user,
+    loading,
+    error,
+    login,
+    logout,
+  };
+}

@@ -5,6 +5,8 @@ import psycopg
 from dotenv import load_dotenv
 from psycopg.rows import dict_row
 
+from data import NewUser, User
+
 load_dotenv()
 
 logger = logging.getLogger("uvicorn")
@@ -19,7 +21,6 @@ DB_HOST = os.getenv("POSTGRES_HOST")
 DB_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 
-# --- Helpers for converting between DB rows and the CSV-like dicts used by the app ---
 def parse_bool_like_csv(value) -> bool:
     if value is None:
         return False
@@ -49,18 +50,34 @@ def row_to_movie_dict(row: dict) -> dict:
     }
 
 
-# --- Persistence functions exposed to the rest of the app ---
-
 def get_movies() -> dict:
     """Return all movies from the DB as {'movies': [...]} (CSV-like dicts)."""
     movies = []
     with psycopg.connect(DB_URL, row_factory=dict_row) as conn:
         with conn.cursor() as cur:
             cur.execute(
-                "SELECT id, title, original_title, description, letterboxd_url, imdb_url, boobies, watched, image_link, rating, votes FROM movies ORDER BY title NULLS LAST")
+                """
+                SELECT m.*,
+                       u.username   AS user_username,
+                       u.avatar_url AS user_avatar_url,
+                       u.discord_id AS user_discord_id
+                FROM movies m
+                         LEFT JOIN users u ON m.user_id = u.id
+                ORDER BY m.title NULLS LAST
+                """
+            )
             rows = cur.fetchall()
             for r in rows:
-                movies.append(row_to_movie_dict(r))
+                movie = row_to_movie_dict(r)
+                if r["user_id"]:
+                    user = {
+                        "username": r["user_username"],
+                        "avatar_url": r["user_avatar_url"],
+                        "discord_id": r["user_discord_id"],
+                    } if r["user_id"] else None
+                    movie['user'] = user
+
+                movies.append(movie)
     return {'movies': movies}
 
 
@@ -158,3 +175,56 @@ def save_movies(data: dict) -> None:
                     )
                 )
             conn.commit()
+
+
+def add_user(user: NewUser) -> User:
+    """Insert a new user into the DB."""
+    with psycopg.connect(DB_URL) as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO users (username, avatar_url, email, discord_id, created_at, is_admin)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                ON CONFLICT (email) DO UPDATE SET discord_id = EXCLUDED.discord_id,
+                                                  username   = EXCLUDED.username,
+                                                  avatar_url = EXCLUDED.avatar_url
+                RETURNING id
+                """,
+                (
+                    user.username,
+                    user.avatar_url,
+                    user.email,
+                    user.discord_id,
+                    user.created_at,
+                    user.is_admin
+                )
+            )
+            new_user_id = cur.fetchone()[0]
+            conn.commit()
+            return user.to_user(new_user_id)
+
+
+def get_user_by_mail(mail: str) -> dict | None:
+    """Retrieve a user by email."""
+    with psycopg.connect(DB_URL, row_factory=dict_row) as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT id, username, avatar_url, email, discord_id, created_at, is_admin
+                FROM users
+                WHERE email = %s
+                """,
+                (mail,)
+            )
+            row = cur.fetchone()
+            if row:
+                return {
+                    'id': row.get('id'),
+                    'username': row.get('username'),
+                    'avatar_url': row.get('avatar_url'),
+                    'email': row.get('email'),
+                    'discord_id': row.get('discord_id'),
+                    'created_at': row.get('created_at'),
+                    'is_admin': bool(row.get('is_admin'))
+                }
+    return None

@@ -1,5 +1,6 @@
 import { createSignal, Show } from "solid-js";
 import MovieSection from "@/components/MovieSection";
+import Login from "@/components/Login";
 import { Header } from "@/components/Header";
 import { CategoryButtons } from "@/components/CategoryButtons";
 import { ViewToggle } from "@/components/ViewToggle";
@@ -7,8 +8,10 @@ import { AddMovieButton } from "@/components/AddMovieButton";
 import { AddMovieModal } from "@/components/AddMovieModal";
 import { useMovies } from "@/hooks/useMovies";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useAuth } from "@/hooks/useAuth";
 
 const App = () => {
+  const { user, loading: authLoading, login, logout } = useAuth();
   const { movies, loading, error, refetch } = useMovies();
   const [showWatched, setShowWatched] = createSignal(true);
   const [showUpcoming, setShowUpcoming] = createSignal(true);
@@ -35,6 +38,13 @@ const App = () => {
     <>
       <Header />
       <main>
+        <Login
+          user={user()}
+          loading={authLoading()}
+          onLogin={login}
+          onLogout={logout}
+        />
+
         <div class="categories">
           <CategoryButtons
             showWatched={showWatched}
