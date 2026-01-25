@@ -1,4 +1,34 @@
+import { User } from "@/hooks/useAuth";
+
 export const api = {
+  // Auth endpoints
+  async getLoginUrl() {
+    const response = await fetch(`/api/login`);
+    if (!response.ok) {
+      throw new Error("Failed to get login URL");
+    }
+    return response.json();
+  },
+
+  async getUser() {
+    const response = await fetch(`/api/user`);
+    if (!response.ok) {
+      throw new Error("Failed to get user");
+    }
+    return (await response.json()) as User;
+  },
+
+  async logout() {
+    const response = await fetch(`/api/logout`, {
+      method: "POST",
+    });
+    if (!response.ok) {
+      throw new Error("Failed to logout");
+    }
+    return response.json();
+  },
+
+  // Movie endpoints
   async getMovies() {
     const response = await fetch(`/api/movies`);
     if (!response.ok) {

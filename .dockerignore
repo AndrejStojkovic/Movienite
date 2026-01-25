@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*$py.class
+.Python
+*.egg-info/
+build/
+.venv/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment
+.env.local
+.env.*.local
+
+# Frontend
+frontend/
+
+# Documentation
+*.md
+!ALEMBIC_README.md
+!MIGRATION_SETUP_SUMMARY.md
+
+# Git
+.git/
+.gitignore
+
+# Docker
+docker/
+!docker/entrypoint.sh
+
+# Other
+movies.csv
+compat/

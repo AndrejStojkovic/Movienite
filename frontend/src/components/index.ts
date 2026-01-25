@@ -5,3 +5,4 @@ export { ViewToggle } from "@/components/ViewToggle";
 export { AddMovieButton } from "@/components/AddMovieButton";
 export { AddMovieModal } from "@/components/AddMovieModal";
 export { MovieRating } from "@/components/MovieRating";
+export { Login } from "@/components/Login";

@@ -9,8 +9,16 @@ COPY pyproject.toml uv.lock ./
 COPY database/db.py /app/database/db.py
 COPY *.py /app/
 
+# Copy Alembic configuration and migrations
+COPY alembic.ini /app/
+COPY alembic /app/alembic
+
+# Copy entrypoint script
+COPY docker/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
 RUN uv sync --frozen --no-dev
 
 EXPOSE 23245
 
-CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "23245"]
+CMD ["/app/entrypoint.sh"]

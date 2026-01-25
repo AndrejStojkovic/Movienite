@@ -3,7 +3,7 @@ services:
   movienite-api:
     environment:
       - PYTHONUNBUFFERED=1
-    command: uv run uvicorn main:app --host 0.0.0.0 --port 23245 --reload
+    command: sh -c "uv run alembic upgrade head && uv run uvicorn main:app --host 0.0.0.0 --port 23245 --reload"
     volumes:
       - ..:/app
     restart: "no"
@@ -16,7 +16,10 @@ services:
     ports:
       - "5173:5173"
     environment:
-      - CHOKIDAR_USEPOLLING=1
+      CHOKIDAR_USEPOLLING: 1
+      DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID}
+      DISCORD_CLIENT_SECRET: ${DISCORD_CLIENT_SECRET}
+      DISCORD_REDIRECT_URI: ${DISCORD_REDIRECT_URI}
     volumes:
       - ../frontend:/app
       - bun-node-modules:/app/node_modules

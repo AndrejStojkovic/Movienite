@@ -9,6 +9,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST: movienite-db
       POSTGRES_PORT: 5432
+      JWT_SECRET: ${JWT_SECRET}
     ports:
       - "23245:23245"
     container_name: movienite-api
@@ -28,7 +29,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - movienite-db-data:/var/lib/postgresql/data
-      - ../database/migrations:/docker-entrypoint-initdb.d:ro
     ports:
       - "${POSTGRES_PORT}:5432"
     container_name: movienite-db

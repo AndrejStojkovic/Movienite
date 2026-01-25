@@ -24,6 +24,10 @@ services:
       context: ..
       dockerfile: docker/web.dockerfile
     container_name: movienite-web-prod
+    environment:
+      DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID}
+      DISCORD_CLIENT_SECRET: ${DISCORD_CLIENT_SECRET}
+      DISCORD_REDIRECT_URI: ${DISCORD_REDIRECT_URI}
     ports:
       - "23246:3000"
     networks:
