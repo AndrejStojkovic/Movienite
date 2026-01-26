@@ -47,7 +47,8 @@ def row_to_movie_dict(row: dict) -> dict:
         'watched': bool_to_csv_str(bool(row.get('watched'))),
         'image_link': row.get('image_link') or '',
         'rating': (str(row.get('rating')) if row.get('rating') is not None else ''),
-        'votes': row.get('votes') or ''
+        'votes': row.get('votes') or '',
+        'inserted_at': row.get('inserted_at').isoformat()
     }
 
     if row.get('user_id') is not None:
@@ -81,6 +82,7 @@ def get_movies() -> dict:
                        m.image_link,
                        m.rating,
                        m.votes,
+                       m.inserted_at,
                        m.user_id,
                        u.username   AS user_username,
                        u.avatar_url AS user_avatar_url,

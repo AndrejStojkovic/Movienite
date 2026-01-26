@@ -9,6 +9,8 @@ import { AddMovieModal } from "@/components/AddMovieModal";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import movieStore, { fetchMovies } from "@/hooks/movieStore";
 import authStore, { login, logout } from "@/hooks/authStore";
+import SortControls from "@/components/SortControls";
+import { makeComparator, SortField } from "@/utils/sort";
 
 const App = () => {
   const [showWatched, setShowWatched] = createSignal(true);
@@ -19,15 +21,36 @@ const App = () => {
   );
   const [modalOpen, setModalOpen] = createSignal(false);
 
-  // Computed movie lists
-  const watchedMovies = createMemo(() =>
+  const [sortField, setSortField] = useLocalStorage<SortField>(
+    "sort-field",
+    SortField.Date,
+  );
+  const [sortReverse, setSortReverse] = useLocalStorage<string>(
+    "sort-reverse",
+    "true",
+  );
+
+  const watchedMoviesRaw = createMemo(() =>
     movieStore.movies.filter((m) => m.watched === "yes"),
   );
-  const upcomingMovies = createMemo(() =>
+  const upcomingMoviesRaw = createMemo(() =>
     movieStore.movies.filter((m) => m.watched !== "yes"),
   );
 
-  // Handlers
+  const watchedMovies = createMemo(() => {
+    const arr = [...watchedMoviesRaw()];
+    const comparator = makeComparator(sortField(), sortReverse() === "true");
+    arr.sort(comparator);
+    return arr;
+  });
+
+  const upcomingMovies = createMemo(() => {
+    const arr = [...upcomingMoviesRaw()];
+    const comparator = makeComparator(sortField(), sortReverse() === "true");
+    arr.sort(comparator);
+    return arr;
+  });
+
   const handleWatchedToggle = () => setShowWatched((v) => !v);
   const handleUpcomingToggle = () => setShowUpcoming((v) => !v);
   const handleViewToggle = () => {
@@ -35,6 +58,10 @@ const App = () => {
   };
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
+
+  const handleSortFieldChange = (val: SortField) => setSortField(val);
+  const handleReverseToggle = () =>
+    setSortReverse(sortReverse() === "true" ? "false" : "true");
 
   return (
     <>
@@ -56,6 +83,12 @@ const App = () => {
           />
           <ViewToggle viewType={viewType} onToggle={handleViewToggle} />
         </div>
+        <SortControls
+          field={sortField()}
+          onFieldChange={handleSortFieldChange}
+          reverse={sortReverse() === "true"}
+          onReverseToggle={handleReverseToggle}
+        />
 
         <Show when={movieStore.loading}>
           <p class="empty-message">Loading movies...</p>

@@ -10,6 +10,7 @@ export interface Movie {
   votes?: string;
   no_reviews?: string;
   watched?: string; // "yes" or undefined
+  inserted_at: string | null;
   user?: {
     id: string;
     username: string;

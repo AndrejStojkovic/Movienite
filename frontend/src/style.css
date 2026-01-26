@@ -527,3 +527,46 @@ header {
   transform: translateY(0);
   background-color: var(--button-active);
 }
+
+/* Sort controls styling */
+.sort-controls {
+  @apply flex items-center gap-3 ml-4 justify-center;
+}
+
+.sort-label {
+  @apply text-sm font-medium;
+  color: var(--text-secondary);
+}
+
+.sort-select {
+  @apply py-2 px-3 rounded-lg border-2 bg-(--input-bg) text-sm;
+  border-color: var(--input-border);
+  color: var(--text-primary);
+}
+
+.sort-select:focus {
+  @apply outline-none;
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--input-focus) 15%, transparent);
+}
+
+.sort-reverse-btn {
+  @apply px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 border-2;
+  background-color: var(--card-bg);
+  color: var(--text-secondary);
+  border-color: var(--border-subtle);
+}
+
+.sort-reverse-btn:hover {
+  @apply -translate-y-px;
+  color: var(--text-primary);
+  border-color: var(--button-bg);
+  box-shadow: 0 4px 6px var(--card-shadow-hover);
+}
+
+.sort-reverse-btn.active {
+  @apply font-semibold;
+  background-color: var(--button-bg);
+  color: white;
+  border-color: var(--button-active-border);
+}
