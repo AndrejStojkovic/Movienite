@@ -1,4 +1,5 @@
 import { User } from "@/hooks/useAuth";
+import type { Movie } from "@/types";
 
 export const api = {
   // Auth endpoints
@@ -29,7 +30,7 @@ export const api = {
   },
 
   // Movie endpoints
-  async getMovies() {
+  async getMovies(): Promise<Movie[]> {
     const response = await fetch(`/api/movies`);
     if (!response.ok) {
       throw new Error(`Failed to load movies: ${response.status}`);

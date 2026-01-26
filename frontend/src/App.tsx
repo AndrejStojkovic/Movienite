@@ -8,12 +8,7 @@ import { AddMovieButton } from "@/components/AddMovieButton";
 import { AddMovieModal } from "@/components/AddMovieModal";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { authApi, loading as authLoading, user } from "@/hooks/useAuth";
-import {
-  error as moviesError,
-  loading as moviesLoading,
-  movies,
-  moviesApi,
-} from "@/hooks/useMovies";
+import movieStore, { fetchMovies } from "@/hooks/movieStore";
 
 const App = () => {
   const { login, logout } = authApi;
@@ -27,10 +22,10 @@ const App = () => {
 
   // Computed movie lists
   const watchedMovies = createMemo(() =>
-    movies().filter((m) => m.watched === "yes"),
+    movieStore.movies.filter((m) => m.watched === "yes"),
   );
   const upcomingMovies = createMemo(() =>
-    movies().filter((m) => m.watched !== "yes"),
+    movieStore.movies.filter((m) => m.watched !== "yes"),
   );
 
   // Handlers
@@ -63,21 +58,21 @@ const App = () => {
           <ViewToggle viewType={viewType} onToggle={handleViewToggle} />
         </div>
 
-        <Show when={moviesLoading()}>
+        <Show when={movieStore.loading}>
           <p class="empty-message">Loading movies...</p>
         </Show>
 
-        <Show when={moviesError()}>
-          <p class="empty-message">{moviesError()}</p>
+        <Show when={movieStore.error}>
+          <p class="empty-message">{movieStore.error}</p>
         </Show>
 
-        <Show when={!moviesLoading() && !moviesError()}>
+        <Show when={!movieStore.error}>
           <Show when={showWatched()}>
             <MovieSection
               title="Watched"
               movies={watchedMovies}
               viewType={viewType()}
-              onAction={moviesApi.fetchMovies}
+              onAction={fetchMovies}
             />
           </Show>
           <Show when={showUpcoming()}>
@@ -85,7 +80,7 @@ const App = () => {
               title="Upcoming"
               movies={upcomingMovies}
               viewType={viewType()}
-              onAction={moviesApi.fetchMovies}
+              onAction={fetchMovies}
             />
           </Show>
         </Show>
@@ -95,7 +90,7 @@ const App = () => {
           <AddMovieModal
             isOpen={modalOpen()}
             onClose={closeModal}
-            onMovieAdded={moviesApi.fetchMovies}
+            onMovieAdded={fetchMovies}
           />
         </Show>
       </main>
