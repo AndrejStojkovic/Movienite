@@ -10,7 +10,8 @@ export interface Movie {
   votes?: string;
   no_reviews?: string;
   watched?: string; // "yes" or undefined
-  inserted_at: string | null;
+  inserted_at?: string | null;
+  boobies?: string; // 'yes' or 'no'
   user?: {
     id: string;
     username: string;

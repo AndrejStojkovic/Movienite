@@ -117,10 +117,15 @@ body {
 }
 
 .movie-card {
-  @apply rounded-xl p-5 flex items-start gap-5 transition-all duration-200;
+  @apply rounded-xl p-5 flex items-start gap-5 transition-all duration-200 border-2 border-transparent;
   background-color: var(--card-bg);
   box-shadow: 0 4px 6px var(--card-shadow);
-  border: 1px solid var(--border-subtle);
+  border-color: var(--border-subtle);
+
+  &.boobies-movie {
+    border-color: #ff69b4;
+    background-color: color-mix(in srgb, #ff69b4 15%, var(--card-bg));
+  }
 }
 
 /* Grid mode: vertical card layout */
@@ -133,15 +138,23 @@ body {
 }
 
 .grid-card .movie-rating {
-  @apply ml-0 items-center flex-row gap-4 w-full justify-center;
+  @apply ml-0 items-center flex-row gap-4 justify-center;
 }
 
-.grid-card .movie-actions {
-  @apply order-first;
+.grid-card .movie-icons {
+  @apply ml-0 items-center flex-row gap-4 w-full justify-between;
 }
 
 .grid-card .movie-links {
   @apply justify-center;
+}
+
+.movie-rating {
+  @apply ml-auto flex flex-col justify-start gap-2 min-w-24 items-center;
+}
+
+.movie-icons {
+  @apply ml-auto flex flex-col justify-start gap-2 min-w-24 items-center;
 }
 
 .movie-card h3 {
@@ -187,12 +200,8 @@ body {
   @apply flex flex-col flex-1 min-w-0;
 }
 
-.movie-rating {
-  @apply ml-auto flex flex-col items-end justify-start gap-2 min-w-24;
-}
-
 .movie-actions {
-  @apply flex gap-3 p-2 w-full justify-center;
+  @apply flex gap-3 p-2 justify-center;
 }
 
 .movie-action-btn {
@@ -231,7 +240,7 @@ body {
 }
 
 .rating-star {
-  @apply w-10 h-10 text-yellow-400;
+  @apply text-yellow-400;
 }
 
 .rating-star svg {

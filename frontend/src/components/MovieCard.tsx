@@ -51,15 +51,20 @@ const MovieCard: Component<MovieCardProps> = (props) => {
   return (
     <div
       class="movie-card"
-      classList={{ "grid-card": props.viewType === "grid" }}
+      classList={{
+        "grid-card": props.viewType === "grid",
+        "boobies-movie": props.movie.boobies === "yes",
+      }}
     >
-      <Show when={props.movie.image_link}>
-        <img
-          src={props.movie.image_link}
-          alt={`${props.movie.title} poster`}
-          class="movie-image"
-        />
-      </Show>
+      <div class="movie-image-display">
+        <Show when={props.movie.image_link}>
+          <img
+            src={props.movie.image_link}
+            alt={`${props.movie.title} poster`}
+            class="movie-image"
+          />
+        </Show>
+      </div>
       <div class="movie-content">
         <h3>{props.movie.title}</h3>
         <Show when={props.movie.original_title?.trim()}>
@@ -89,7 +94,7 @@ const MovieCard: Component<MovieCardProps> = (props) => {
       <Show
         when={props.movie.rating || props.movie.votes || props.movie.no_reviews}
       >
-        <div class="movie-rating">
+        <div class="movie-icons">
           <div class="movie-actions">
             <Show when={canToggleWatch()}>
               <button
@@ -114,11 +119,13 @@ const MovieCard: Component<MovieCardProps> = (props) => {
               </button>
             </Show>
           </div>
-          <MovieRating
-            rating={props.movie.rating}
-            votes={props.movie.votes}
-            no_reviews={props.movie.no_reviews}
-          />
+          <div class="movie-rating">
+            <MovieRating
+              rating={props.movie.rating}
+              votes={props.movie.votes}
+              no_reviews={props.movie.no_reviews}
+            />
+          </div>
         </div>
       </Show>
     </div>

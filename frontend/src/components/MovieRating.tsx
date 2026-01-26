@@ -15,13 +15,11 @@ export const MovieRating: Component<MovieRatingProps> = (props) => {
 
   return (
     <Show when={props.rating || props.votes || props.no_reviews}>
-      <div class="movie-rating">
-        <div class="rating-star">
-          <FiStar />
-        </div>
-        <div class="rating-value">{formattedRating()}</div>
-        <div class="rating-votes">{props.votes || props.no_reviews || ""}</div>
+      <div class="rating-star">
+        <FiStar size={24} />
       </div>
+      <div class="rating-value">{formattedRating()}</div>
+      <div class="rating-votes">{props.votes || props.no_reviews || ""}</div>
     </Show>
   );
 };
