@@ -16,7 +16,7 @@ from pydantic import BaseModel
 
 from data import NewUser
 from database.db import add_movie as _add_movie, get_movies, add_user, get_user_by_mail
-from database.db import get_movie_by_id, delete_movie, toggle_movie_watched
+from database.db import get_movie_by_id, delete_movie, toggle_movie_watched, toggle_movie_boobies
 from discord_oauth import get_oauth_url, get_access_token, get_discord_user
 from movienite import fetch_imdb, fetch_letterboxd, fetch_boxd
 
@@ -258,6 +258,50 @@ async def discard_movie(movie_id: str, session_token: str | None = Cookie(None))
         return JSONResponse(status_code=500, content={"error": "Failed to delete movie"})
 
     return {"message": "Movie deleted"}
+
+
+@app.post("/movies/{movie_id}/toggle_boobies")
+async def toggle_boobies(movie_id: str, session_token: str | None = Cookie(None)):
+    if not session_token:
+        return JSONResponse(status_code=401, content={"error": "Not authenticated"})
+
+    try:
+        payload = decode_session_jwt(session_token)
+        email = payload.get('email')
+        if not email:
+            raise ValueError('Email not in token')
+    except Exception as e:
+        logger.error(f"Invalid session token: {e}")
+        return JSONResponse(status_code=401, content={"error": "Invalid session"})
+
+    user = get_user_by_mail(email)
+    if not user:
+        return JSONResponse(status_code=404, content={"error": "User not found"})
+
+    movie_row = get_movie_by_id(movie_id)
+    if not movie_row:
+        return JSONResponse(status_code=404, content={"error": "Movie not found"})
+
+    if user.get('is_admin'):
+        new_val = toggle_movie_boobies(movie_id)
+        if new_val is None:
+            return JSONResponse(status_code=500, content={"error": "Failed to toggle boobies"})
+        return {"message": "Toggled boobies", "boobies": new_val}
+
+    owner_id = movie_row.get('user_id')
+    watched_flag = bool(movie_row.get('watched'))
+
+    if owner_id is None or owner_id != user.get('id'):
+        return JSONResponse(status_code=403, content={"error": "You can only toggle boobies on your own movies"})
+
+    if watched_flag:
+        return JSONResponse(status_code=403, content={"error": "Cannot modify watched movies"})
+
+    new_val = toggle_movie_boobies(movie_id)
+    if new_val is None:
+        return JSONResponse(status_code=500, content={"error": "Failed to toggle boobies"})
+
+    return {"message": "Toggled boobies", "boobies": new_val}
 
 
 def main():

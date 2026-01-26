@@ -294,3 +294,18 @@ def toggle_movie_watched(movie_id: str) -> bool | None:
             if not row:
                 return None
             return bool(row.get('watched'))
+
+
+def toggle_movie_boobies(movie_id: str) -> bool | None:
+    """Toggle the boobies (nsfw) flag for a movie and return the new value (True/False).
+
+    Returns None if the movie was not found.
+    """
+    with psycopg.connect(DB_URL, row_factory=dict_row) as conn:
+        with conn.cursor() as cur:
+            cur.execute('UPDATE movies SET boobies = NOT boobies WHERE id = %s RETURNING boobies', (movie_id,))
+            row = cur.fetchone()
+            conn.commit()
+            if not row:
+                return None
+            return bool(row.get('boobies'))

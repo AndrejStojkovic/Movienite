@@ -70,4 +70,14 @@ export const api = {
     }
     return response.json();
   },
+
+  async toggleBoobies(movieId: string) {
+    const response = await fetch(`/api/movies/${movieId}/toggle_boobies`, {
+      method: "POST",
+    });
+    if (!response.ok) {
+      throw new Error("Failed to toggle boobies");
+    }
+    return response.json();
+  },
 };

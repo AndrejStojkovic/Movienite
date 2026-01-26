@@ -3,6 +3,7 @@ import { api } from "@/utils/api";
 import { MovieRating } from "@/components/MovieRating";
 import authStore from "@/hooks/authStore";
 import { FiEye, FiEyeOff, FiTrash } from "solid-icons/fi";
+import { TbOutlineRating18Plus } from "solid-icons/tb";
 import type { Movie } from "@/types";
 
 interface MovieCardProps {
@@ -34,6 +35,16 @@ const MovieCard: Component<MovieCardProps> = (props) => {
     }
   };
 
+  const handleToggleBoobies = async () => {
+    setActionLoading(true);
+    try {
+      await api.toggleBoobies(props.movie.id);
+      props.onAction?.();
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   const isWatched = () => props.movie.watched === "yes";
 
   const canToggleWatch = () => !!authStore.user && authStore.user.is_admin;
@@ -47,6 +58,19 @@ const MovieCard: Component<MovieCardProps> = (props) => {
       props.movie.watched !== "yes"
     );
   };
+
+  const canToggleBoobies = () => {
+    if (!authStore.user) return false;
+    if (authStore.user.is_admin) return true;
+
+    return (
+      props.movie.user?.id === authStore.user.id &&
+      props.movie.watched !== "yes"
+    );
+  };
+
+  const boobiesLabel =
+    props.movie.boobies === "yes" ? "Has boobies!" : "No boobies...";
 
   return (
     <div
@@ -107,6 +131,19 @@ const MovieCard: Component<MovieCardProps> = (props) => {
                 {isWatched() ? <FiEyeOff /> : <FiEye />}
               </button>
             </Show>
+
+            <Show when={canToggleBoobies()}>
+              <button
+                class="movie-action-btn action-nsfw"
+                title={boobiesLabel}
+                aria-label={boobiesLabel}
+                disabled={actionLoading()}
+                onClick={handleToggleBoobies}
+              >
+                <TbOutlineRating18Plus size={20} />
+              </button>
+            </Show>
+
             <Show when={canDiscard()}>
               <button
                 class="movie-action-btn action-discard"
