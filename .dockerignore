@@ -19,9 +19,6 @@ ENV/
 .env.local
 .env.*.local
 
-# Frontend
-frontend/
-
 # Documentation
 *.md
 !ALEMBIC_README.md
@@ -33,6 +30,7 @@ frontend/
 
 # Docker
 docker/
+!docker/nginx.conf
 !docker/entrypoint.sh
 
 # Other
