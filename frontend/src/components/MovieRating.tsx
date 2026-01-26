@@ -1,5 +1,5 @@
-import { StarIcon } from "@/components/icons/StarIcon";
 import { type Component, Show } from "solid-js";
+import { FiStar } from "solid-icons/fi";
 
 interface MovieRatingProps {
   rating?: string;
@@ -17,7 +17,7 @@ export const MovieRating: Component<MovieRatingProps> = (props) => {
     <Show when={props.rating || props.votes || props.no_reviews}>
       <div class="movie-rating">
         <div class="rating-star">
-          <StarIcon />
+          <FiStar />
         </div>
         <div class="rating-value">{formattedRating()}</div>
         <div class="rating-votes">{props.votes || props.no_reviews || ""}</div>

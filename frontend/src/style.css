@@ -123,11 +123,6 @@ body {
   border: 1px solid var(--border-subtle);
 }
 
-.movie-card:hover {
-  @apply -translate-y-0.5;
-  box-shadow: 0 8px 16px var(--card-shadow-hover);
-}
-
 /* Grid mode: vertical card layout */
 .grid-card {
   @apply flex-col items-center text-center;
@@ -236,7 +231,7 @@ body {
 }
 
 .rating-star {
-  @apply w-7 h-7;
+  @apply w-10 h-10 text-yellow-400;
 }
 
 .rating-star svg {

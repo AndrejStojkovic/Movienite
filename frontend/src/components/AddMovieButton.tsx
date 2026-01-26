@@ -1,5 +1,5 @@
-import { PlusIcon } from "@/components/icons";
 import type { Component } from "solid-js";
+import { FiPlus } from "solid-icons/fi";
 
 interface AddMovieButtonProps {
   onClick: () => void;
@@ -12,6 +12,6 @@ export const AddMovieButton: Component<AddMovieButtonProps> = (props) => (
     aria-label="Add Movie"
     title="Add Movie"
   >
-    <PlusIcon />
+    <FiPlus />
   </button>
 );

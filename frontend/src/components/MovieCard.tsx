@@ -1,10 +1,8 @@
 import { Component, createSignal, Show } from "solid-js";
 import { api } from "@/utils/api";
-import { WatchIcon } from "@/components/icons/WatchIcon";
-import { UnwatchIcon } from "@/components/icons/UnwatchIcon";
-import { DiscardIcon } from "@/components/icons/DiscardIcon";
 import { MovieRating } from "@/components/MovieRating";
 import authStore from "@/hooks/authStore";
+import { FiEye, FiEyeOff, FiTrash } from "solid-icons/fi";
 import type { Movie } from "@/types";
 
 interface MovieCardProps {
@@ -101,7 +99,7 @@ const MovieCard: Component<MovieCardProps> = (props) => {
                 disabled={actionLoading()}
                 onClick={handleWatchToggle}
               >
-                {isWatched() ? <UnwatchIcon /> : <WatchIcon />}
+                {isWatched() ? <FiEyeOff /> : <FiEye />}
               </button>
             </Show>
             <Show when={canDiscard()}>
@@ -112,7 +110,7 @@ const MovieCard: Component<MovieCardProps> = (props) => {
                 disabled={actionLoading()}
                 onClick={handleDiscard}
               >
-                <DiscardIcon />
+                <FiTrash size={24} />
               </button>
             </Show>
           </div>

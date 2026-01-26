@@ -1,5 +1,4 @@
-import { GridIcon } from "@/components/icons/GridIcon";
-import { ListIcon } from "@/components/icons/ListIcon";
+import { FiGrid, FiList } from "solid-icons/fi";
 import type { Accessor, Component } from "solid-js";
 
 interface ViewToggleProps {
@@ -14,6 +13,6 @@ export const ViewToggle: Component<ViewToggleProps> = (props) => (
     onClick={props.onToggle}
     aria-label="Toggle view"
   >
-    {props.viewType() === "grid" ? <ListIcon /> : <GridIcon />}
+    {props.viewType() === "grid" ? <FiList size={24} /> : <FiGrid size={24} />}
   </button>
 );

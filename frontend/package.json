@@ -18,8 +18,9 @@
     "vite-plugin-solid": "^2.11.8"
   },
   "dependencies": {
-    "vite": "^7.3.1",
     "@types/node": "^25.0.9",
-    "solid-js": "^1.9.9"
+    "solid-icons": "^1.2.0",
+    "solid-js": "^1.9.9",
+    "vite": "^7.3.1"
   }
 }

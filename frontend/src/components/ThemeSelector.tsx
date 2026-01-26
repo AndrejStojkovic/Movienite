@@ -1,6 +1,6 @@
 import { useTheme } from "@/hooks/useTheme";
-import { SunIcon, MoonIcon, SystemIcon } from "@/components/icons";
-import { Component, createSignal, Show, onCleanup } from "solid-js";
+import { FiMonitor, FiMoon, FiSun } from "solid-icons/fi";
+import { Component, createSignal, onCleanup, Show } from "solid-js";
 
 export const ThemeSelector: Component = () => {
   const { theme, updateTheme } = useTheme();
@@ -48,11 +48,11 @@ export const ThemeSelector: Component = () => {
   const getThemeIcon = (themeName: string) => {
     switch (themeName) {
       case "light":
-        return <SunIcon />;
+        return <FiSun size={20} />;
       case "dark":
-        return <MoonIcon />;
+        return <FiMoon size={20} />;
       default:
-        return <SystemIcon />;
+        return <FiMonitor size={20} />;
     }
   };
 
@@ -101,7 +101,7 @@ export const ThemeSelector: Component = () => {
             classList={{ active: theme() === "system" }}
             onClick={() => handleSelect("system")}
           >
-            <SystemIcon />
+            <FiMonitor size={24} />
             <span>System</span>
           </button>
           <button
@@ -109,7 +109,7 @@ export const ThemeSelector: Component = () => {
             classList={{ active: theme() === "light" }}
             onClick={() => handleSelect("light")}
           >
-            <SunIcon />
+            <FiSun size={24} />
             <span>Light</span>
           </button>
           <button
@@ -117,7 +117,7 @@ export const ThemeSelector: Component = () => {
             classList={{ active: theme() === "dark" }}
             onClick={() => handleSelect("dark")}
           >
-            <MoonIcon />
+            <FiMoon size={24} />
             <span>Dark</span>
           </button>
         </div>
