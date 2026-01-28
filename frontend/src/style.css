@@ -400,7 +400,7 @@ body {
 }
 
 .theme-selector {
-  @apply absolute top-6 right-6 z-50;
+  @apply fixed top-6 right-6 z-50;
 }
 
 .theme-toggle-btn {
@@ -538,6 +538,32 @@ header {
 }
 
 /* Sort controls styling */
+.search-container {
+  @apply flex items-center gap-2 justify-center my-4 mx-auto max-w-md relative;
+}
+
+.search-icon {
+  @apply absolute left-3 flex items-center pointer-events-none;
+  color: var(--text-secondary);
+}
+
+.search-input {
+  @apply w-full py-2 pl-10 pr-4 rounded-lg border-2 text-sm;
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-primary);
+}
+
+.search-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.search-input:focus {
+  @apply outline-none;
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--input-focus) 15%, transparent);
+}
+
 .sort-controls {
   @apply flex items-center gap-3 ml-4 justify-center;
 }

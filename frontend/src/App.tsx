@@ -6,6 +6,7 @@ import { CategoryButtons } from "@/components/CategoryButtons";
 import { ViewToggle } from "@/components/ViewToggle";
 import { AddMovieButton } from "@/components/AddMovieButton";
 import { AddMovieModal } from "@/components/AddMovieModal";
+import { SearchInput } from "@/components/SearchInput";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import movieStore, { fetchMovies } from "@/hooks/movieStore";
 import authStore, { login, logout } from "@/hooks/authStore";
@@ -16,6 +17,7 @@ const App = () => {
   const [showWatched, setShowWatched] = createSignal(true);
   const [showUpcoming, setShowUpcoming] = createSignal(true);
   const [modalOpen, setModalOpen] = createSignal(false);
+  const [searchQuery, setSearchQuery] = createSignal("");
 
   const { value: viewType, setValue: setViewType } = useLocalStorage<
     "list" | "grid"
@@ -27,11 +29,19 @@ const App = () => {
   const { value: sortReverse, updateWithPrevious: toggleSortReverse } =
     useLocalStorage<"true" | "false">("sort-reverse", "true");
 
+  const filteredMovies = createMemo(() => {
+    const query = searchQuery().toLowerCase().trim();
+    if (!query) return movieStore.movies;
+    return movieStore.movies.filter((m) =>
+      m.title?.toLowerCase().includes(query)
+    );
+  });
+
   const watchedMoviesRaw = createMemo(() =>
-    movieStore.movies.filter((m) => m.watched === "yes"),
+    filteredMovies().filter((m) => m.watched === "yes"),
   );
   const upcomingMoviesRaw = createMemo(() =>
-    movieStore.movies.filter((m) => m.watched !== "yes"),
+    filteredMovies().filter((m) => m.watched !== "yes"),
   );
 
   const watchedMovies = createMemo(() => {
@@ -80,6 +90,7 @@ const App = () => {
           />
           <ViewToggle viewType={viewType} onToggle={handleViewToggle} />
         </div>
+        <SearchInput value={searchQuery()} onInput={setSearchQuery} />
         <SortControls
           field={sortField()}
           onFieldChange={handleSortFieldChange}
