@@ -4,6 +4,7 @@ export enum SortField {
   Date = "date",
   Title = "title",
   User = "user",
+  Rating = "rating",
 }
 
 type MovieComparator = (movie1: Movie, movie2: Movie) => number;
@@ -16,6 +17,12 @@ const getTitleOrDefault = (movie: Movie, defaultTitle: string = "") =>
 
 const getUserOrDefault = (movie: Movie, defaultUser: string = "") =>
   movie.user?.username || defaultUser;
+
+const getRatingOrDefault = (movie: Movie, defaultRating: number = 0) => {
+  if (!movie.rating) return defaultRating;
+  const rating = parseFloat(movie.rating.replace("/10", ""));
+  return isNaN(rating) ? defaultRating : rating;
+};
 
 export const compareByDate = (movie1: Movie, movie2: Movie) => {
   const date1 = getInsertDateOrDefault(movie1);
@@ -38,10 +45,18 @@ export const compareByUser = (movie1: Movie, movie2: Movie) => {
   return user1.localeCompare(user2);
 };
 
+export const compareByRating = (movie1: Movie, movie2: Movie) => {
+  const rating1 = getRatingOrDefault(movie1);
+  const rating2 = getRatingOrDefault(movie2);
+
+  return rating1 - rating2;
+};
+
 const compareFunctions: Record<SortField, MovieComparator> = {
   [SortField.Date]: compareByDate,
   [SortField.Title]: compareByTitle,
   [SortField.User]: compareByUser,
+  [SortField.Rating]: compareByRating,
 } as const;
 
 export const makeComparator =

@@ -28,6 +28,7 @@ const SortControls: Component<SortControlsProps> = (props) => {
         <option value="date">Date added</option>
         <option value="title">Title</option>
         <option value="user">User</option>
+        <option value="rating">Rating</option>
       </select>
 
       <button
