@@ -538,8 +538,12 @@ header {
 }
 
 /* Sort controls styling */
+.search-filters {
+  @apply flex items-center gap-4 justify-center my-4 mx-auto max-w-3xl px-4 flex-wrap;
+}
+
 .search-container {
-  @apply flex items-center gap-2 justify-center my-4 mx-auto max-w-md relative;
+  @apply flex items-center gap-2 flex-1 min-w-64 relative;
 }
 
 .search-icon {
@@ -604,4 +608,79 @@ header {
   background-color: var(--button-bg);
   color: white;
   border-color: var(--button-active-border);
+}
+
+/* User filter styling */
+.user-filter-container {
+  @apply relative flex-1 min-w-48 max-w-64;
+}
+
+.user-filter-input-wrapper {
+  @apply flex items-center relative;
+}
+
+.user-filter-icon {
+  @apply absolute left-3 flex items-center pointer-events-none;
+  color: var(--text-secondary);
+}
+
+.user-filter-input {
+  @apply w-full py-2 pl-10 pr-16 rounded-lg border-2 text-sm;
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-primary);
+}
+
+.user-filter-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.user-filter-input:focus {
+  @apply outline-none;
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--input-focus) 15%, transparent);
+}
+
+.user-filter-clear {
+  @apply absolute right-9 flex items-center justify-center p-1 rounded cursor-pointer transition-colors;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+}
+
+.user-filter-clear:hover {
+  color: var(--text-primary);
+}
+
+.user-filter-toggle {
+  @apply absolute right-2 flex items-center justify-center p-1 rounded cursor-pointer transition-colors;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+}
+
+.user-filter-toggle:hover {
+  color: var(--text-primary);
+}
+
+.user-filter-dropdown {
+  @apply absolute top-full left-0 right-0 mt-1 rounded-lg border-2 overflow-hidden z-50 max-h-64 overflow-y-auto;
+  background-color: var(--card-bg);
+  border-color: var(--input-border);
+  box-shadow: 0 4px 12px var(--card-shadow);
+}
+
+.user-filter-option {
+  @apply w-full text-left px-4 py-2 text-sm cursor-pointer transition-colors border-none;
+  background-color: transparent;
+  color: var(--text-primary);
+}
+
+.user-filter-option:hover {
+  background-color: color-mix(in srgb, var(--button-bg) 10%, var(--card-bg));
+}
+
+.user-filter-option.selected {
+  background-color: color-mix(in srgb, var(--button-bg) 20%, var(--card-bg));
+  font-weight: 500;
 }
