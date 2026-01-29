@@ -105,7 +105,7 @@ export const UserFilter: Component<UserFilterProps> = (props) => {
                 classList={{
                   selected: username.toLowerCase() === props.value.toLowerCase(),
                 }}
-                onMouseDown={() => handleSelect(username)}
+                onClick={() => handleSelect(username)}
               >
                 {username}
               </button>
