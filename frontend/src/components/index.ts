@@ -6,3 +6,5 @@ export { AddMovieButton } from "@/components/AddMovieButton";
 export { AddMovieModal } from "@/components/AddMovieModal";
 export { MovieRating } from "@/components/MovieRating";
 export { Login } from "@/components/Login";
+export { SearchInput } from "@/components/SearchInput";
+export { UserFilter } from "@/components/UserFilter";

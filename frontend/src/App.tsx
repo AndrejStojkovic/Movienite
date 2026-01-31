@@ -7,6 +7,7 @@ import { ViewToggle } from "@/components/ViewToggle";
 import { AddMovieButton } from "@/components/AddMovieButton";
 import { AddMovieModal } from "@/components/AddMovieModal";
 import { SearchInput } from "@/components/SearchInput";
+import { UserFilter } from "@/components/UserFilter";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import movieStore, { fetchMovies } from "@/hooks/movieStore";
 import authStore, { login, logout } from "@/hooks/authStore";
@@ -18,6 +19,7 @@ const App = () => {
   const [showUpcoming, setShowUpcoming] = createSignal(true);
   const [modalOpen, setModalOpen] = createSignal(false);
   const [searchQuery, setSearchQuery] = createSignal("");
+  const [userFilter, setUserFilter] = createSignal("");
 
   const { value: viewType, setValue: setViewType } = useLocalStorage<
     "list" | "grid"
@@ -30,11 +32,22 @@ const App = () => {
     useLocalStorage<"true" | "false">("sort-reverse", "true");
 
   const filteredMovies = createMemo(() => {
-    const query = searchQuery().toLowerCase().trim();
-    if (!query) return movieStore.movies;
-    return movieStore.movies.filter((m) =>
-      m.title?.toLowerCase().includes(query)
-    );
+    const titleQuery = searchQuery().toLowerCase().trim();
+    const username = userFilter().toLowerCase().trim();
+
+    if (!titleQuery && !username) return movieStore.movies;
+
+    return movieStore.movies.filter((m) => {
+      // Filter by username if specified (partial match)
+      if (username && !m.user?.username?.toLowerCase().includes(username)) {
+        return false;
+      }
+      // Filter by title if there's search text
+      if (titleQuery && !m.title?.toLowerCase().includes(titleQuery)) {
+        return false;
+      }
+      return true;
+    });
   });
 
   const watchedMoviesRaw = createMemo(() =>
@@ -90,7 +103,14 @@ const App = () => {
           />
           <ViewToggle viewType={viewType} onToggle={handleViewToggle} />
         </div>
-        <SearchInput value={searchQuery()} onInput={setSearchQuery} />
+        <div class="search-filters">
+          <SearchInput value={searchQuery()} onInput={setSearchQuery} />
+          <UserFilter
+            value={userFilter()}
+            onInput={setUserFilter}
+            movies={movieStore.movies}
+          />
+        </div>
         <SortControls
           field={sortField()}
           onFieldChange={handleSortFieldChange}
