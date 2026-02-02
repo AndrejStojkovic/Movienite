@@ -1,4 +1,4 @@
-import { Accessor, type Component, For, ParentProps, Show } from "solid-js";
+import { Accessor, type Component, For, Show } from "solid-js";
 import MovieCard from "@/components/MovieCard";
 import type { Movie } from "@/types";
 import { usePagination } from "@/hooks/usePagination";

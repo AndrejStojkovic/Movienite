@@ -1,6 +1,6 @@
 import { range } from "@/utils/pagination";
 import { FaSolidCaretLeft, FaSolidCaretRight } from "solid-icons/fa";
-import { Component, Show } from "solid-js"
+import { Component } from "solid-js"
 
 interface PaginationControlsProps {
     currentPage: number;
