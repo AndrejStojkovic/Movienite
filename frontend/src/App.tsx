@@ -1,4 +1,4 @@
-import { createEffect, createMemo, createSignal, onMount, Show } from "solid-js";
+import { createMemo, createSignal, Show } from "solid-js";
 import MovieSection from "@/components/MovieSection";
 import Login from "@/components/Login";
 import { Header } from "@/components/Header";
@@ -13,7 +13,6 @@ import movieStore, { fetchMovies } from "@/hooks/movieStore";
 import authStore, { login, logout } from "@/hooks/authStore";
 import SortControls from "@/components/SortControls";
 import { makeComparator, SortField } from "@/utils/sort";
-import PaginationControls from "./components/PaginationControls";
 
 const App = () => {
   const [showWatched, setShowWatched] = createSignal(true);
@@ -34,6 +33,8 @@ const App = () => {
 
   const { value: pageSize, setValue: setPageSize } =
     useLocalStorage<string>("page-size", "0");
+
+  const maxItemsPerPage = createMemo(() => { return Number(pageSize())});
 
   const filteredMovies = createMemo(() => {
     const titleQuery = searchQuery().toLowerCase().trim();
@@ -141,7 +142,7 @@ const App = () => {
               movies={watchedMovies}
               viewType={viewType()}
               onAction={fetchMovies}
-              itemsPerPage={Number(pageSize())}
+              itemsPerPage={maxItemsPerPage}
             />
           </Show>
           <Show when={showUpcoming()}>
@@ -150,7 +151,7 @@ const App = () => {
               movies={upcomingMovies}
               viewType={viewType()}
               onAction={fetchMovies}
-              itemsPerPage={Number(pageSize())}
+              itemsPerPage={maxItemsPerPage}
             />
           </Show>
         </Show>

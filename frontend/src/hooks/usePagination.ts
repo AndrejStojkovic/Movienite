@@ -1,18 +1,22 @@
-import { createMemo, createSignal } from "solid-js";
+import { Accessor, createMemo, createSignal } from "solid-js";
 
 export const usePagination = <T>(
     items: () => T[],
-    itemsPerPage: number = 20
+    itemsPerPage: Accessor<number> | number = () => 20
 ) => {
     const [currentPage, setCurrentPage] = createSignal(1);
 
-    const totalPages = createMemo(() => Math.ceil(items().length / itemsPerPage));
+    const getPageSize = () =>
+        typeof itemsPerPage === "function" ? itemsPerPage() : itemsPerPage;
+
+    const totalPages = createMemo(() => getPageSize() > 0 ? Math.ceil(items().length / getPageSize()) : 0);
 
     const paginatedItems = createMemo(() => {
-        if(!itemsPerPage || itemsPerPage == 0)
+        const perPage = getPageSize();
+        if(!perPage || perPage == 0)
             return items();
-        const start = (currentPage() - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
+        const start = (currentPage() - 1) * perPage;
+        const end = start + perPage;
         return items().slice(start, end);
     });
 

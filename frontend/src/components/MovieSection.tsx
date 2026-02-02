@@ -9,7 +9,7 @@ interface MovieSectionProps {
   movies: Accessor<Movie[]>;
   viewType?: "list" | "grid";
   onAction?: () => void;
-  itemsPerPage?: number;
+  itemsPerPage?: Accessor<number>;
 }
 
 const MovieSection: Component<MovieSectionProps> = (props) => {
