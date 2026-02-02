@@ -1,15 +1,29 @@
 import { Accessor, type Component, For, ParentProps, Show } from "solid-js";
 import MovieCard from "@/components/MovieCard";
 import type { Movie } from "@/types";
+import { usePagination } from "@/hooks/usePagination";
+import PaginationControls from "./PaginationControls";
 
-interface MovieSectionProps extends ParentProps {
+interface MovieSectionProps {
   title: string;
   movies: Accessor<Movie[]>;
   viewType?: "list" | "grid";
   onAction?: () => void;
+  itemsPerPage?: number;
 }
 
 const MovieSection: Component<MovieSectionProps> = (props) => {
+  const itemsPerPage = () => props.itemsPerPage ?? 0;
+
+  const {
+    paginatedItems,
+    currentPage,
+    totalPages,
+    goToPage,
+    nextPage,
+    previousPage
+  } = usePagination<Movie>(props.movies, itemsPerPage());
+
   const gridClass = () =>
     `movie-list${props.viewType === "grid" ? " movie-grid" : ""}`;
 
@@ -18,7 +32,15 @@ const MovieSection: Component<MovieSectionProps> = (props) => {
       <h2 class="section-heading">
         {props.title} {`(${props.movies().length})`}
       </h2>
-      {props.children}
+      {totalPages() > 1 && (
+        <PaginationControls
+          currentPage={currentPage()}
+          totalPages={totalPages()}
+          onGoToPage={(page) => goToPage(page)}
+          onNext={nextPage}
+          onPrevious={previousPage}
+        />
+      )}
       <div class={gridClass()}>
         <Show
           when={props.movies().length > 0}
@@ -26,7 +48,7 @@ const MovieSection: Component<MovieSectionProps> = (props) => {
             <p class="empty-message">No {props.title.toLowerCase()} movies.</p>
           }
         >
-          <For each={props.movies()}>
+          <For each={paginatedItems()}>
             {(movie) => (
               <MovieCard
                 movie={movie}
