@@ -1,4 +1,12 @@
-import { Component, createMemo, createSignal, For, onCleanup, onMount, Show } from "solid-js";
+import {
+  Component,
+  createMemo,
+  createSignal,
+  For,
+  onCleanup,
+  onMount,
+  Show,
+} from "solid-js";
 import { FiUser, FiChevronDown, FiX } from "solid-icons/fi";
 import type { Movie } from "@/types";
 
@@ -20,7 +28,7 @@ export const UserFilter: Component<UserFilterProps> = (props) => {
       }
     }
     return Array.from(usersMap.values()).sort((a, b) =>
-      a.toLowerCase().localeCompare(b.toLowerCase())
+      a.toLowerCase().localeCompare(b.toLowerCase()),
     );
   });
 
@@ -28,7 +36,7 @@ export const UserFilter: Component<UserFilterProps> = (props) => {
     const query = props.value.toLowerCase().trim();
     if (!query) return uniqueUsers();
     return uniqueUsers().filter((username) =>
-      username.toLowerCase().includes(query)
+      username.toLowerCase().includes(query),
     );
   });
 
@@ -103,7 +111,8 @@ export const UserFilter: Component<UserFilterProps> = (props) => {
               <button
                 class="user-filter-option"
                 classList={{
-                  selected: username.toLowerCase() === props.value.toLowerCase(),
+                  selected:
+                    username.toLowerCase() === props.value.toLowerCase(),
                 }}
                 onClick={() => handleSelect(username)}
               >
