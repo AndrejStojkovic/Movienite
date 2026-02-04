@@ -43,15 +43,15 @@ export const UserFilter: Component<UserFilterProps> = (props) => {
       }
     }
     return Array.from(usersMap.values()).sort((a, b) =>
-            a.username.toLowerCase().localeCompare(b.username.toLowerCase())
+      a.username.toLowerCase().localeCompare(b.username.toLowerCase()),
     );
   });
 
   const filteredUsers = createMemo(() => {
     const query = props.value.toLowerCase().trim();
     if (!query) return uniqueUsers();
-     return uniqueUsers().filter((user) =>
-      user.username.toLowerCase().includes(query)
+    return uniqueUsers().filter((user) =>
+      user.username.toLowerCase().includes(query),
     );
   });
 
@@ -171,7 +171,8 @@ export const UserFilter: Component<UserFilterProps> = (props) => {
               <button
                 class="user-filter-option"
                 classList={{
-                  selected: user.username.toLowerCase() === props.value.toLowerCase(),
+                  selected:
+                    user.username.toLowerCase() === props.value.toLowerCase(),
                   highlighted: index() === highlightedIndex(),
                 }}
                 onClick={() => handleSelect(user.username)}
