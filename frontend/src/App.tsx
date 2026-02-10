@@ -71,10 +71,10 @@ const App = () => {
   });
 
   const watchedMoviesRaw = createMemo(() =>
-    filteredMovies().filter((m) => m.watched === "yes"),
+    filteredMovies().filter((m) => m.watched),
   );
   const upcomingMoviesRaw = createMemo(() =>
-    filteredMovies().filter((m) => m.watched !== "yes"),
+    filteredMovies().filter((m) => !m.watched),
   );
 
   const watchedMovies = createMemo(() => {
