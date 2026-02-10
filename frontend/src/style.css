@@ -781,3 +781,29 @@ header {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
+
+.nsfw-filter {
+  @apply flex items-center gap-2;
+}
+
+.nsfw-filter label {
+  @apply flex items-center gap-2 text-sm font-medium;
+  color: var(--text-secondary);
+}
+
+.nsfw-filter-select {
+  @apply py-2 px-3 rounded-lg border-2 text-sm cursor-pointer;
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-primary);
+}
+
+.nsfw-filter-select:focus {
+  @apply outline-none;
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--input-focus) 15%, transparent);
+}
+
+.nsfw-filter-select:hover {
+  border-color: var(--text-secondary);
+}
