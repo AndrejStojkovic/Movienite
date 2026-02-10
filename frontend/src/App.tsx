@@ -24,7 +24,9 @@ const App = () => {
     users: [],
     mode: "whitelist",
   });
-  const [nsfwFilter, setNsfwFilter] = createSignal<NSFWFilterValue>(NSFWFilterValue.ALL);
+  const [nsfwFilter, setNsfwFilter] = createSignal<NSFWFilterValue>(
+    NSFWFilterValue.ALL,
+  );
 
   const { value: viewType, setValue: setViewType } = useLocalStorage<
     "list" | "grid"
