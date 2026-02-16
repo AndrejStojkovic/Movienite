@@ -14,14 +14,16 @@ export const MovieRating: Component<MovieRatingProps> = (props) => {
   };
 
   const getIconPath = () => {
-    const rating = props.rating ? Number(props.rating.split("/")[0]) : 0;
-    return getStarIconPathBasedOnRating(rating);
+    const rawRating = props.rating ?? "";
+    const numericRating = parseFloat(rawRating.replace("/10", ""));
+    const safeRating = Number.isNaN(numericRating) ? 0 : numericRating;
+    return getStarIconPathBasedOnRating(safeRating);
   };
 
   return (
     <Show when={props.rating || props.votes || props.no_reviews}>
       <div class="rating-star">
-        <img src={getIconPath()} alt="Star" />
+        <img src={getIconPath()} alt="" />
       </div>
       <div class="rating-value">{formattedRating()}</div>
       <div class="rating-votes">{props.votes || props.no_reviews || ""}</div>

@@ -148,8 +148,7 @@
 }
 
 .rating-star img {
-  @apply w-full h-full block;
-  width: 48px;
+  @apply w-12 h-12 block;
 }
 
 .rating-value {

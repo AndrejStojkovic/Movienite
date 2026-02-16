@@ -1,4 +1,3 @@
-const STAR_ICON_PATH = "/public";
 const STAR_ICON_EXTENSION = "svg";
 
 const RATING_THRESHOLDS = [
@@ -9,11 +8,11 @@ const RATING_THRESHOLDS = [
 ] as const;
 
 export const getStarIconPathBasedOnRating = (rating: number): string => {
-  if (!rating) {
-    return `${STAR_ICON_PATH}/bronze_star.${STAR_ICON_EXTENSION}`;
+  if (!Number.isFinite(rating)) {
+    return `/bronze_star.${STAR_ICON_EXTENSION}`;
   }
   const matchedThreshold =
     RATING_THRESHOLDS.find(({ min }) => rating >= min) ??
     RATING_THRESHOLDS[RATING_THRESHOLDS.length - 1];
-  return `${STAR_ICON_PATH}/${matchedThreshold.icon}.${STAR_ICON_EXTENSION}`;
+  return `/${matchedThreshold.icon}.${STAR_ICON_EXTENSION}`;
 };
