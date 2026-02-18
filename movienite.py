@@ -10,7 +10,6 @@ FETCH_HEADER = {
     "Accept-Language": "en-US,en;q=0.9"
 }
 
-
 def fetch_imdb(url: str) -> dict | None:
     try:
         response = requests.get(url, headers=FETCH_HEADER)
@@ -32,23 +31,30 @@ def fetch_imdb(url: str) -> dict | None:
         rating = rating[8].text.strip()
         score = rating.split('/')[0]
         votes = rating.split('/')[1][2:]
+        letterboxd_url = fetch_letterboxd_url_by_imdb_id(id)
 
         return {
             'id': id,
             'title': title,
             'original_title': original_title,
             'description': description,
-            'letterboxd_url': '',
+            'letterboxd_url': letterboxd_url,
             'imdb_url': imdb_url,
             'image_link': image_link,
             'rating': score,
             'votes': votes,
-            'boobies': 'no',
-            'watched': 'no'
+            'boobies': False,
+            'watched': False
         }
     except:
         return None
 
+def fetch_letterboxd_url_by_imdb_id(imdb_id: str) -> str | None:
+    url = f"https://letterboxd.com/imdb/{imdb_id}/"
+    response = requests.get(url, headers=FETCH_HEADER, allow_redirects=True)
+    if response.status_code == 200:
+        return response.url
+    return ""
 
 def fetch_letterboxd(url: str) -> dict | None:
     """Resolve a Letterboxd URL to an IMDb title by searching IMDb.

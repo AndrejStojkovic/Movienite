@@ -1,25 +1,35 @@
 import { createMemo, createSignal, Show } from "solid-js";
 import MovieSection from "@/components/MovieSection";
-import Login from "@/components/Login";
+import { Login } from "@/components/Login";
 import { Header } from "@/components/Header";
 import { CategoryButtons } from "@/components/CategoryButtons";
 import { ViewToggle } from "@/components/ViewToggle";
 import { AddMovieButton } from "@/components/AddMovieButton";
 import { AddMovieModal } from "@/components/AddMovieModal";
 import { SearchInput } from "@/components/SearchInput";
-import { UserFilter } from "@/components/UserFilter";
+import { UserFilter, UserFilterValue } from "@/components/UserFilter";
+import { NSFWFilter, NSFWFilterValue } from "@/components/NSFWFilter";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useMovieEvents } from "@/hooks/useMovieEvents";
 import movieStore, { fetchMovies } from "@/hooks/movieStore";
 import authStore, { login, logout } from "@/hooks/authStore";
 import SortControls from "@/components/SortControls";
 import { makeComparator, SortField } from "@/utils/sort";
 
 const App = () => {
+  useMovieEvents();
+
   const [showWatched, setShowWatched] = createSignal(true);
   const [showUpcoming, setShowUpcoming] = createSignal(true);
   const [modalOpen, setModalOpen] = createSignal(false);
   const [searchQuery, setSearchQuery] = createSignal("");
-  const [userFilter, setUserFilter] = createSignal("");
+  const [userFilter, setUserFilter] = createSignal<UserFilterValue>({
+    users: [],
+    mode: "whitelist",
+  });
+  const [nsfwFilter, setNsfwFilter] = createSignal<NSFWFilterValue>(
+    NSFWFilterValue.ALL,
+  );
 
   const { value: viewType, setValue: setViewType } = useLocalStorage<
     "list" | "grid"
@@ -40,28 +50,45 @@ const App = () => {
 
   const filteredMovies = createMemo(() => {
     const titleQuery = searchQuery().toLowerCase().trim();
-    const username = userFilter().toLowerCase().trim();
+    const filter = userFilter();
+    const nsfw = nsfwFilter();
 
-    if (!titleQuery && !username) return movieStore.movies;
+    let movies = movieStore.movies;
 
-    return movieStore.movies.filter((m) => {
-      // Filter by username if specified (partial match)
-      if (username && !m.user?.username?.toLowerCase().includes(username)) {
-        return false;
-      }
-      // Filter by title if there's search text
-      if (titleQuery && !m.title?.toLowerCase().includes(titleQuery)) {
-        return false;
-      }
-      return true;
-    });
+    if (filter.users.length > 0) {
+      const selectedUsersLower = filter.users.map((u) => u.toLowerCase());
+
+      movies = movies.filter((m) => {
+        const movieUsername = m.user?.username?.toLowerCase();
+        if (!movieUsername) {
+          return filter.mode === "blacklist";
+        }
+
+        const isInSelection = selectedUsersLower.includes(movieUsername);
+        return filter.mode === "whitelist" ? isInSelection : !isInSelection;
+      });
+    }
+
+    if (nsfw === NSFWFilterValue.NSFW) {
+      movies = movies.filter((m) => m.boobies);
+    } else if (nsfw === NSFWFilterValue.SFW) {
+      movies = movies.filter((m) => !m.boobies);
+    }
+
+    if (titleQuery) {
+      movies = movies.filter((m) =>
+        m.title?.toLowerCase().includes(titleQuery),
+      );
+    }
+
+    return movies;
   });
 
   const watchedMoviesRaw = createMemo(() =>
-    filteredMovies().filter((m) => m.watched === "yes"),
+    filteredMovies().filter((m) => m.watched),
   );
   const upcomingMoviesRaw = createMemo(() =>
-    filteredMovies().filter((m) => m.watched !== "yes"),
+    filteredMovies().filter((m) => !m.watched),
   );
 
   const watchedMovies = createMemo(() => {
@@ -119,6 +146,7 @@ const App = () => {
             onInput={setUserFilter}
             movies={movieStore.movies}
           />
+          <NSFWFilter value={nsfwFilter()} onInput={setNsfwFilter} />
         </div>
         <SortControls
           field={sortField()}
