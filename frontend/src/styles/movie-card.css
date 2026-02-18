@@ -147,6 +147,10 @@
   @apply w-full h-full block;
 }
 
+.rating-star img {
+  @apply w-12 h-12 block;
+}
+
 .rating-value {
   @apply font-bold text-lg leading-none;
   color: var(--text-primary);

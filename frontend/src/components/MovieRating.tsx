@@ -1,5 +1,5 @@
+import { getStarIconPathBasedOnRating } from "@/utils/rating";
 import { type Component, Show } from "solid-js";
-import { FiStar } from "solid-icons/fi";
 
 interface MovieRatingProps {
   rating?: string;
@@ -13,10 +13,17 @@ export const MovieRating: Component<MovieRatingProps> = (props) => {
     return props.rating.includes("/") ? props.rating : `${props.rating}/10`;
   };
 
+  const getIconPath = () => {
+    const rawRating = props.rating ?? "";
+    const numericRating = parseFloat(rawRating.replace("/10", ""));
+    const safeRating = Number.isNaN(numericRating) ? 0 : numericRating;
+    return getStarIconPathBasedOnRating(safeRating);
+  };
+
   return (
     <Show when={props.rating || props.votes || props.no_reviews}>
       <div class="rating-star">
-        <FiStar size={24} />
+        <img src={getIconPath()} alt="" />
       </div>
       <div class="rating-value">{formattedRating()}</div>
       <div class="rating-votes">{props.votes || props.no_reviews || ""}</div>
