@@ -18,7 +18,9 @@ const MovieCard: Component<MovieCardProps> = (props) => {
   const [actionLoading, setActionLoading] = createSignal(false);
 
   const movieIconsClass = () =>
-    isUserAdmin() && props.viewType === "grid" ? "movie-icons-col" : "movie-icons";
+    isUserAdmin() && props.viewType === "grid"
+      ? "movie-icons-col"
+      : "movie-icons";
 
   const handleSetStatus = async (targetStatus: MovieStatus) => {
     setActionLoading(true);
